@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  django:
+    build:
+      context: ./lunch_decision
+      dockerfile: Dockerfile
+    container_name: lunch_decision
+    env_file:
+      - .env-dev-django
+    ports:
+      - "8001:8000"
+    depends_on:
+      - pgdb
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8000/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  pgdb:
+    image: postgres
+    env_file: .env-dev-postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    container_name: pgdb
+
+volumes:
+  db-data:
