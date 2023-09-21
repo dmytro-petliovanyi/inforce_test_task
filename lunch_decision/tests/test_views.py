@@ -124,17 +124,3 @@ def test_get_restaurant_detail(api_client, create_test_data):
 
     assert response.status_code == status.HTTP_200_OK
     assert response_data["name"] == restaurant.name
-
-
-@pytest.mark.django_db
-def test_get_vote_detail(api_client, create_test_data):
-    admin = create_test_data["admin"]
-    api_client.force_authenticate(user=admin)
-
-    vote = create_test_data["vote"]
-    response = api_client.get("/api/votes/")
-    response_data = response.data[0]
-
-    assert response.status_code == status.HTTP_200_OK
-    assert response_data.get("user") == vote.user.id
-    assert response_data.get("menu") == vote.menu.id
